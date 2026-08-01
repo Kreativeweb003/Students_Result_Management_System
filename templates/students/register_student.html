@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Register student{% endblock %}
+{% block page_title %}Register student{% endblock %}
+
+{% block content %}
+<div class="gl-page-head">
+  <div>
+    <span class="gl-page-head__eyebrow">People</span>
+    <h2 class="gl-mt-0">Register a student</h2>
+    <p>A matriculation number and login account are generated automatically once saved.</p>
+  </div>
+</div>
+
+<div class="gl-card" style="max-width: 720px;">
+  <form method="post">
+    {% csrf_token %}
+    <div class="gl-form-grid">
+      <div class="gl-form-row"><label>First name</label>{{ form.first_name }}</div>
+      <div class="gl-form-row"><label>Last name</label>{{ form.last_name }}</div>
+      <div class="gl-form-row"><label>Email</label>{{ form.email }}
+        {% if form.email.errors %}<div class="gl-error">{{ form.email.errors.0 }}</div>{% endif %}
+      </div>
+      <div class="gl-form-row"><label>Username</label>{{ form.username }}
+        {% if form.username.errors %}<div class="gl-error">{{ form.username.errors.0 }}</div>{% endif %}
+      </div>
+      <div class="gl-form-row"><label>Password</label>{{ form.password }}</div>
+      <div class="gl-form-row"><label>Gender</label>{{ form.gender }}</div>
+      <div class="gl-form-row"><label>Date of birth</label>{{ form.date_of_birth }}</div>
+      <div class="gl-form-row"><label>Study mode</label>{{ form.study_mode }}</div>
+      <div class="gl-form-row"><label>Department</label>{{ form.department }}</div>
+      <div class="gl-form-row"><label>Programme</label>{{ form.programme }}</div>
+      <div class="gl-form-row"><label>Level</label>{{ form.level }}</div>
+      <div class="gl-form-row"><label>Admission session</label>{{ form.admission_session }}</div>
+    </div>
+    {% if form.non_field_errors %}<div class="gl-alert gl-alert--error">{{ form.non_field_errors.0 }}</div>{% endif %}
+    <div class="gl-form-actions">
+      <button type="submit" class="gl-btn gl-btn--accent">Register student</button>
+      <a href="{% url 'students:student_list' %}" class="gl-btn gl-btn--ghost">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

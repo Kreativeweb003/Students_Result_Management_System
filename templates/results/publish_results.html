@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Publish results{% endblock %}
+{% block page_title %}Publish results{% endblock %}
+
+{% block content %}
+<div class="gl-page-head">
+  <div>
+    <span class="gl-page-head__eyebrow">Results</span>
+    <h2 class="gl-mt-0">Publish results</h2>
+    <p>Makes every result for the chosen session and semester visible to students. There's no approval step — this is the only gate before students can see their scores.</p>
+  </div>
+</div>
+
+<div class="gl-card" style="max-width: 480px;">
+  <form method="post">
+    {% csrf_token %}
+    <div class="gl-form-row">
+      <label for="session">Session</label>
+      <select name="session" id="session" required>
+        {% for session in sessions %}
+          <option value="{{ session.id }}">{{ session.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="gl-form-row">
+      <label for="semester">Semester</label>
+      <select name="semester" id="semester" required>
+        {% for semester in semesters %}
+          <option value="{{ semester.id }}">{{ semester }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="gl-alert gl-alert--warning">This publishes every matching result immediately — double-check the session and semester before confirming.</div>
+    <div class="gl-form-actions">
+      <button type="submit" class="gl-btn gl-btn--accent">Publish results</button>
+      <a href="{% url 'results:admin_result_list' %}" class="gl-btn gl-btn--ghost">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

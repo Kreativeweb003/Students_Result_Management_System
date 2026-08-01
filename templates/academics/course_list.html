@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Courses{% endblock %}
+{% block page_title %}Courses{% endblock %}
+
+{% block content %}
+<div class="gl-page-head">
+  <div>
+    <span class="gl-page-head__eyebrow">Setup</span>
+    <h2 class="gl-mt-0">Courses</h2>
+    <p>Courses carry a credit unit, used when calculating GPA and CGPA.</p>
+  </div>
+</div>
+
+<div class="gl-card">
+  <div class="gl-card__title">Add a course</div>
+  <form method="post" class="aca-inline-form">
+    {% csrf_token %}
+    <div class="gl-form-row"><label>Code</label>{{ form.code }}</div>
+    <div class="gl-form-row" style="flex: 2;"><label>Title</label>{{ form.title }}</div>
+    <div class="gl-form-row"><label>Unit</label>{{ form.unit }}</div>
+    <div class="gl-form-row"><label>Department</label>{{ form.department }}</div>
+    <button type="submit" class="gl-btn gl-btn--accent">Add course</button>
+  </form>
+</div>
+
+<div class="gl-card">
+  <div class="gl-card__title">All courses</div>
+  <div class="gl-table-wrap">
+    <table class="gl-table">
+      <thead><tr><th>Code</th><th>Title</th><th>Unit</th><th>Department</th></tr></thead>
+      <tbody>
+        {% for course in courses %}
+        <tr>
+          <td><span class="aca-tag">{{ course.code }}</span></td>
+          <td>{{ course.title }}</td>
+          <td class="gl-num">{{ course.unit }}</td>
+          <td>{{ course.department.name|default:"—" }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4" class="gl-table-empty">No courses yet — add one above.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

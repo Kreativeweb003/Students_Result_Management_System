@@ -1,0 +1,39 @@
+<aside class="gl-sidebar">
+  <div class="gl-sidebar__brand">
+    SRMS
+    <span>Registrar's Office</span>
+  </div>
+
+  <nav class="gl-nav">
+    {% if user.is_admin %}
+      <span class="gl-nav__section-label">Setup</span>
+      <a class="gl-nav__link" href="{% url 'academics:home' %}">Academic structure</a>
+      <a class="gl-nav__link" href="{% url 'academics:department_list' %}">Departments</a>
+      <a class="gl-nav__link" href="{% url 'academics:course_list' %}">Courses</a>
+      <a class="gl-nav__link" href="{% url 'academics:curriculum_list' %}">Curriculum</a>
+
+      <span class="gl-nav__section-label">People</span>
+      <a class="gl-nav__link" href="{% url 'students:student_list' %}">Students</a>
+      <a class="gl-nav__link" href="{% url 'lecturers:lecturer_list' %}">Lecturers</a>
+      <a class="gl-nav__link" href="{% url 'lecturers:allocation_list' %}">Course allocations</a>
+
+      <span class="gl-nav__section-label">Results</span>
+      <a class="gl-nav__link" href="{% url 'results:admin_result_list' %}">All results</a>
+      <a class="gl-nav__link" href="{% url 'results:publish_results' %}">Publish results</a>
+      <a class="gl-nav__link" href="{% url 'reports:statistics' %}">Statistics</a>
+    {% elif user.is_lecturer %}
+      <span class="gl-nav__section-label">Lecturer</span>
+      <a class="gl-nav__link" href="{% url 'lecturers:dashboard' %}">Dashboard</a>
+      <a class="gl-nav__link" href="{% url 'results:select_course' %}">Enter results</a>
+    {% elif user.is_student %}
+      <span class="gl-nav__section-label">Student</span>
+      <a class="gl-nav__link" href="{% url 'students:dashboard' %}">Dashboard</a>
+      <a class="gl-nav__link" href="{% url 'results:view_results' %}">My results</a>
+      <a class="gl-nav__link" href="{% url 'reports:transcript' %}">Transcript</a>
+      <a class="gl-nav__link" href="{% url 'students:profile' %}">Profile</a>
+    {% endif %}
+
+    <span class="gl-nav__section-label">Account</span>
+    <a class="gl-nav__link" href="{% url 'accounts:change_password' %}">Change password</a>
+  </nav>
+</aside>

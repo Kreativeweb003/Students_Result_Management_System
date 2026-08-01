@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}Statistics{% endblock %}
+{% block page_title %}Statistics{% endblock %}
+
+{% block content %}
+<div class="gl-page-head">
+  <div>
+    <span class="gl-page-head__eyebrow">Results</span>
+    <h2 class="gl-mt-0">Course statistics</h2>
+    <p>Average score and pass/fail counts per course.</p>
+  </div>
+</div>
+
+<form method="get" class="rpt-filter-form">
+  <div class="gl-form-row">
+    <label>Session</label>
+    <select name="session">
+      <option value="">All sessions</option>
+      {% for session in sessions %}<option value="{{ session.id }}">{{ session.name }}</option>{% endfor %}
+    </select>
+  </div>
+  <div class="gl-form-row">
+    <label>Semester</label>
+    <select name="semester">
+      <option value="">All semesters</option>
+      {% for semester in semesters %}<option value="{{ semester.id }}">{{ semester }}</option>{% endfor %}
+    </select>
+  </div>
+  <div class="gl-form-row" style="align-self:flex-end;">
+    <button type="submit" class="gl-btn gl-btn--accent">Filter</button>
+  </div>
+</form>
+
+<div class="gl-card">
+  <div class="gl-table-wrap">
+    <table class="gl-table">
+      <thead><tr><th>Course</th><th>Students</th><th>Avg. score</th><th>Pass rate</th><th></th></tr></thead>
+      <tbody>
+        {% for row in course_stats %}
+        <tr>
+          <td>{{ row.course__code }} — {{ row.course__title }}</td>
+          <td class="gl-num">{{ row.total_students }}</td>
+          <td class="gl-num">{{ row.average_score|floatformat:1 }}</td>
+          <td class="gl-num">{{ row.pass_count }} / {{ row.total_students }}</td>
+          <td style="width:120px;">
+            <div class="rpt-bar-track">
+              <div class="rpt-bar-fill" style="width: {% widthratio row.pass_count row.total_students 100 %}%;"></div>
+            </div>
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="5" class="gl-table-empty">No results to summarize yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

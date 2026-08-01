@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Departments{% endblock %}
+{% block page_title %}Departments{% endblock %}
+
+{% block content %}
+<div class="gl-page-head">
+  <div>
+    <span class="gl-page-head__eyebrow">Setup</span>
+    <h2 class="gl-mt-0">Departments</h2>
+    <p>Each department groups courses and students under a short code, e.g. CS for Computer Science.</p>
+  </div>
+</div>
+
+<div class="gl-card">
+  <div class="gl-card__title">Add a department</div>
+  <form method="post" class="aca-inline-form">
+    {% csrf_token %}
+    <div class="gl-form-row">
+      <label for="id_name">Name</label>
+      {{ form.name }}
+    </div>
+    <div class="gl-form-row">
+      <label for="id_code">Code</label>
+      {{ form.code }}
+    </div>
+    <button type="submit" class="gl-btn gl-btn--accent">Add department</button>
+  </form>
+</div>
+
+<div class="gl-card">
+  <div class="gl-card__title">All departments</div>
+  <div class="gl-table-wrap">
+    <table class="gl-table">
+      <thead><tr><th>Code</th><th>Name</th></tr></thead>
+      <tbody>
+        {% for dept in departments %}
+        <tr>
+          <td><span class="aca-tag">{{ dept.code }}</span></td>
+          <td>{{ dept.name }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="2" class="gl-table-empty">No departments yet — add one above.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

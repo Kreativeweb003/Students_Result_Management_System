@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block page_title %}My dashboard{% endblock %}
+
+{% block content %}
+<div class="gl-page-head">
+  <div>
+    <span class="gl-page-head__eyebrow">Welcome back</span>
+    <h2 class="gl-mt-0">{{ student.full_name }}</h2>
+    <p class="stu-id-card__matric">{{ student.matric_number }}</p>
+  </div>
+</div>
+
+<dl class="stu-meta-grid" style="margin-bottom: 24px;">
+  <div><dt>Department</dt><dd>{{ student.department.name|default:"—" }}</dd></div>
+  <div><dt>Programme</dt><dd>{{ student.programme|default:"—" }}</dd></div>
+  <div><dt>Level</dt><dd>{{ student.level.name|default:"—" }}</dd></div>
+  <div><dt>Study mode</dt><dd>{{ student.get_study_mode_display }}</dd></div>
+</dl>
+
+<div class="gl-card">
+  <div class="gl-card__title">Quick links</div>
+  <div class="gl-form-actions">
+    <a href="{% url 'results:view_results' %}" class="gl-btn gl-btn--accent">View my results</a>
+    <a href="{% url 'reports:transcript' %}" class="gl-btn gl-btn--ghost">Download transcript</a>
+    <a href="{% url 'students:profile' %}" class="gl-btn gl-btn--ghost">Edit profile</a>
+  </div>
+</div>
+{% endblock %}

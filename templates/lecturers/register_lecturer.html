@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Register lecturer{% endblock %}
+{% block page_title %}Register lecturer{% endblock %}
+
+{% block content %}
+<div class="gl-page-head">
+  <div>
+    <span class="gl-page-head__eyebrow">People</span>
+    <h2 class="gl-mt-0">Register a lecturer</h2>
+    <p>Creates a login account and staff profile in one step.</p>
+  </div>
+</div>
+
+<div class="gl-card" style="max-width: 640px;">
+  <form method="post">
+    {% csrf_token %}
+    <div class="gl-form-grid">
+      <div class="gl-form-row"><label>Title</label>{{ form.title }}</div>
+      <div class="gl-form-row"><label>Staff ID</label>{{ form.staff_id }}</div>
+      <div class="gl-form-row"><label>First name</label>{{ form.first_name }}</div>
+      <div class="gl-form-row"><label>Last name</label>{{ form.last_name }}</div>
+      <div class="gl-form-row"><label>Email</label>{{ form.email }}
+        {% if form.email.errors %}<div class="gl-error">{{ form.email.errors.0 }}</div>{% endif %}
+      </div>
+      <div class="gl-form-row"><label>Username</label>{{ form.username }}
+        {% if form.username.errors %}<div class="gl-error">{{ form.username.errors.0 }}</div>{% endif %}
+      </div>
+      <div class="gl-form-row"><label>Password</label>{{ form.password }}</div>
+      <div class="gl-form-row"><label>Department</label>{{ form.department }}</div>
+    </div>
+    <div class="gl-form-actions">
+      <button type="submit" class="gl-btn gl-btn--accent">Register lecturer</button>
+      <a href="{% url 'lecturers:lecturer_list' %}" class="gl-btn gl-btn--ghost">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

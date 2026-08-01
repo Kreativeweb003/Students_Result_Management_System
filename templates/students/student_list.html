@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Students{% endblock %}
+{% block page_title %}Students{% endblock %}
+
+{% block content %}
+<div class="gl-page-head">
+  <div>
+    <span class="gl-page-head__eyebrow">People</span>
+    <h2 class="gl-mt-0">Students</h2>
+    <p>{{ students.count }} student{{ students.count|pluralize }} on record.</p>
+  </div>
+  <a href="{% url 'students:register_student' %}" class="gl-btn gl-btn--accent">Register student</a>
+</div>
+
+<form method="get" class="stu-filter-bar">
+  <select name="department" class="gl-form-row" onchange="this.form.submit()">
+    <option value="">All departments</option>
+  </select>
+</form>
+
+<div class="gl-card">
+  <div class="gl-table-wrap">
+    <table class="gl-table">
+      <thead><tr><th>Matric no.</th><th>Name</th><th>Department</th><th>Programme</th><th>Level</th><th>Mode</th></tr></thead>
+      <tbody>
+        {% for student in students %}
+        <tr onclick="window.location='{% url 'students:student_detail' student.pk %}'" style="cursor:pointer;">
+          <td class="gl-num">{{ student.matric_number }}</td>
+          <td>{{ student.full_name }}</td>
+          <td>{{ student.department.code|default:"—" }}</td>
+          <td>{{ student.programme.name|default:"—" }}</td>
+          <td>{{ student.level.name|default:"—" }}</td>
+          <td>{{ student.get_study_mode_display }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="6" class="gl-table-empty">No students match yet. Register one to get started.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

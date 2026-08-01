@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}My results{% endblock %}
+{% block page_title %}My results{% endblock %}
+
+{% block content %}
+<div class="gl-page-head">
+  <div>
+    <span class="gl-page-head__eyebrow">Results</span>
+    <h2 class="gl-mt-0">Published results</h2>
+    <p>Only results the registrar has published are shown here.</p>
+  </div>
+</div>
+
+<div class="gl-card">
+  <div class="res-gpa-block">
+    <div class="res-gpa-block__item">
+      <div class="res-gpa-block__value">{{ semester_gpa|default:"—" }}</div>
+      <div class="res-gpa-block__label">Current semester GPA</div>
+    </div>
+    <div class="res-gpa-block__item">
+      <div class="res-gpa-block__value">{{ cgpa }}</div>
+      <div class="res-gpa-block__label">Cumulative CGPA</div>
+    </div>
+    <div class="res-gpa-block__item">
+      <div class="res-gpa-block__value" style="font-size:1.1rem;">{{ standing }}</div>
+      <div class="res-gpa-block__label">Academic standing</div>
+    </div>
+  </div>
+</div>
+
+<div class="gl-card">
+  <div class="gl-card__title">All published results</div>
+  <div class="gl-table-wrap">
+    <table class="gl-table">
+      <thead><tr><th>Session</th><th>Semester</th><th>Course</th><th>Unit</th><th>Total</th><th>Grade</th></tr></thead>
+      <tbody>
+        {% for result in results %}
+        <tr>
+          <td>{{ result.session.name }}</td>
+          <td>{{ result.semester.get_name_display }}</td>
+          <td>{{ result.course.code }} — {{ result.course.title }}</td>
+          <td class="gl-num">{{ result.course.unit }}</td>
+          <td class="gl-num">{{ result.total_score }}</td>
+          <td><span class="res-grade-pill">{{ result.grade }}</span></td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="6" class="gl-table-empty">No published results yet. Check back once your registrar publishes this semester's results.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

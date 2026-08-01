@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block page_title %}My dashboard{% endblock %}
+
+{% block content %}
+<div class="gl-page-head">
+  <div>
+    <span class="gl-page-head__eyebrow">Welcome back</span>
+    <h2 class="gl-mt-0">{{ lecturer.full_name }}</h2>
+    <p>{{ lecturer.department.name|default:"" }} {% if current_semester %}· {{ current_semester }}{% endif %}</p>
+  </div>
+</div>
+
+<div class="gl-card">
+  <div class="gl-card__title">Courses allocated to you this semester</div>
+  {% for allocation in allocations %}
+    <div class="lec-course-card">
+      <div>
+        <div class="lec-course-card__code">{{ allocation.course.code }}</div>
+        <div class="gl-text-muted">{{ allocation.course.title }}</div>
+      </div>
+      <a href="{% url 'results:enter_results' allocation.pk %}" class="gl-btn gl-btn--accent gl-btn--sm">Enter results</a>
+    </div>
+  {% empty %}
+    <p class="gl-text-muted">No courses allocated to you for the current semester yet. Contact the registrar if this looks wrong.</p>
+  {% endfor %}
+</div>
+{% endblock %}

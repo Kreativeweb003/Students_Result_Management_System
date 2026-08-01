@@ -1,0 +1,241 @@
+/* =========================================================================
+   SRMS — Student Result Management System
+   Single shared stylesheet. Classes are namespaced per section:
+     gl-   shared/global layout & components (used everywhere)
+     acc-  accounts app (login, password)
+     aca-  academics app (departments, courses, curriculum)
+     stu-  students app
+     lec-  lecturers app
+     res-  results app
+     rpt-  reports app
+   Design language: a registrar's ledger — deep ink navy, brass accent,
+   a serif "seal" face for headings, tabular mono for scores/matric numbers,
+   stamp-style status badges.
+   ========================================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap');
+
+:root {
+  --ink: #1c2b39;
+  --ink-soft: #33465a;
+  --paper: #f6f3ea;
+  --paper-dim: #efe8d8;
+  --card: #fffdf8;
+  --accent: #b1793c;
+  --accent-deep: #8a5a24;
+  --accent-soft: #f0e2c8;
+  --line: #d9d0ba;
+  --success: #3f6b4f;
+  --success-soft: #e2ede4;
+  --danger: #9c3d3d;
+  --danger-soft: #f3e2e0;
+  --white: #ffffff;
+  --radius: 6px;
+  --shadow: 0 1px 2px rgba(28, 43, 57, 0.06), 0 6px 20px rgba(28, 43, 57, 0.05);
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body: 'Inter', -apple-system, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+}
+
+* { box-sizing: border-box; }
+html { -webkit-font-smoothing: antialiased; }
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  background: var(--paper);
+  color: var(--ink);
+  font-size: 15px;
+  line-height: 1.5;
+}
+a { color: var(--accent-deep); text-decoration: none; }
+a:hover { text-decoration: underline; }
+h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 600; margin: 0 0 .4em; color: var(--ink); }
+p { margin: 0 0 1em; }
+:focus-visible { outline: 2px solid var(--accent-deep); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+
+/* ---------- App shell ---------- */
+.gl-app { display: flex; min-height: 100vh; }
+
+.gl-sidebar {
+  width: 240px;
+  flex-shrink: 0;
+  background: var(--ink);
+  color: var(--paper);
+  padding: 28px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+.gl-sidebar__brand {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: .01em;
+  color: var(--white);
+  border-bottom: 1px solid rgba(246,243,234,.15);
+  padding-bottom: 18px;
+}
+.gl-sidebar__brand span { display: block; font-family: var(--font-mono); font-size: .68rem; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); margin-top: 4px; }
+.gl-nav { display: flex; flex-direction: column; gap: 2px; }
+.gl-nav__link {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 12px; border-radius: var(--radius);
+  color: rgba(246,243,234,.8); font-size: .89rem; font-weight: 500;
+}
+.gl-nav__link:hover { background: rgba(246,243,234,.08); text-decoration: none; color: var(--white); }
+.gl-nav__link.is-active { background: var(--accent); color: var(--ink); font-weight: 600; }
+.gl-nav__section-label { font-family: var(--font-mono); font-size: .65rem; text-transform: uppercase; letter-spacing: .12em; color: rgba(246,243,234,.4); margin: 14px 0 2px; padding: 0 12px; }
+
+.gl-main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+
+.gl-topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 32px; background: var(--card); border-bottom: 1px solid var(--line);
+}
+.gl-topbar__title { font-family: var(--font-display); font-size: 1.3rem; }
+.gl-topbar__user { display: flex; align-items: center; gap: 14px; font-size: .85rem; color: var(--ink-soft); }
+.gl-topbar__user strong { color: var(--ink); }
+.gl-logout-btn { font-family: var(--font-mono); font-size: .72rem; letter-spacing: .05em; text-transform: uppercase; color: var(--danger); border: 1px solid var(--danger); padding: 6px 12px; border-radius: var(--radius); background: none; cursor: pointer; }
+.gl-logout-btn:hover { background: var(--danger-soft); text-decoration: none; }
+
+.gl-container { padding: 32px; max-width: 1180px; width: 100%; margin: 0 auto; }
+.gl-page-head { margin-bottom: 24px; display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+.gl-page-head__eyebrow { font-family: var(--font-mono); font-size: .7rem; letter-spacing: .14em; text-transform: uppercase; color: var(--accent-deep); display: block; margin-bottom: 6px; }
+.gl-page-head p { color: var(--ink-soft); max-width: 60ch; margin: 6px 0 0; }
+
+/* ---------- Cards ---------- */
+.gl-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 24px;
+}
+.gl-card + .gl-card { margin-top: 20px; }
+.gl-card__title { font-size: 1rem; margin-bottom: 14px; padding-bottom: 12px; border-bottom: 1px dashed var(--line); }
+
+.gl-stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 16px; margin-bottom: 24px; }
+.gl-stat { background: var(--card); border: 1px solid var(--line); border-left: 3px solid var(--accent); border-radius: var(--radius); padding: 18px 20px; }
+.gl-stat__label { font-family: var(--font-mono); font-size: .68rem; text-transform: uppercase; letter-spacing: .1em; color: var(--ink-soft); }
+.gl-stat__value { font-family: var(--font-display); font-size: 2rem; font-weight: 600; margin-top: 4px; }
+
+/* ---------- Buttons & forms ---------- */
+.gl-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--font-body); font-weight: 600; font-size: .85rem;
+  padding: 10px 18px; border-radius: var(--radius); border: 1px solid transparent;
+  cursor: pointer; background: var(--ink); color: var(--white);
+}
+.gl-btn:hover { background: var(--ink-soft); text-decoration: none; }
+.gl-btn--accent { background: var(--accent); color: var(--ink); }
+.gl-btn--accent:hover { background: var(--accent-deep); color: var(--white); }
+.gl-btn--ghost { background: none; border-color: var(--line); color: var(--ink); }
+.gl-btn--ghost:hover { background: var(--paper-dim); }
+.gl-btn--danger { background: none; border-color: var(--danger); color: var(--danger); }
+.gl-btn--danger:hover { background: var(--danger-soft); }
+.gl-btn--sm { padding: 6px 12px; font-size: .78rem; }
+
+.gl-form-row { margin-bottom: 16px; }
+.gl-form-row label { display: block; font-size: .8rem; font-weight: 600; margin-bottom: 6px; color: var(--ink-soft); }
+.gl-form-row input, .gl-form-row select, .gl-form-row textarea {
+  width: 100%; padding: 10px 12px; font-family: var(--font-body); font-size: .9rem;
+  border: 1px solid var(--line); border-radius: var(--radius); background: var(--white); color: var(--ink);
+}
+.gl-form-row input:focus, .gl-form-row select:focus, .gl-form-row textarea:focus { border-color: var(--accent-deep); }
+.gl-form-row .gl-help { font-size: .75rem; color: var(--ink-soft); margin-top: 4px; }
+.gl-form-row .gl-error { font-size: .78rem; color: var(--danger); margin-top: 4px; }
+.gl-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 20px; }
+.gl-form-actions { display: flex; gap: 10px; margin-top: 20px; }
+
+/* ---------- Tables ---------- */
+.gl-table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); }
+.gl-table { width: 100%; border-collapse: collapse; font-size: .87rem; background: var(--card); }
+.gl-table th {
+  text-align: left; font-family: var(--font-mono); font-size: .68rem; text-transform: uppercase;
+  letter-spacing: .08em; color: var(--ink-soft); background: var(--paper-dim);
+  padding: 10px 14px; border-bottom: 1px solid var(--line);
+}
+.gl-table td { padding: 10px 14px; border-bottom: 1px solid var(--line); }
+.gl-table tbody tr:last-child td { border-bottom: none; }
+.gl-table tbody tr:hover { background: var(--paper-dim); }
+.gl-table .gl-num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.gl-table-empty { padding: 40px 20px; text-align: center; color: var(--ink-soft); }
+
+/* ---------- Badges / stamps ---------- */
+.gl-badge {
+  display: inline-block; font-family: var(--font-mono); font-size: .68rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: .08em; padding: 3px 9px; border-radius: 999px;
+}
+.gl-badge--ok { background: var(--success-soft); color: var(--success); }
+.gl-badge--warn { background: var(--accent-soft); color: var(--accent-deep); }
+.gl-badge--off { background: var(--danger-soft); color: var(--danger); }
+
+.gl-stamp {
+  display: inline-block; font-family: var(--font-mono); font-size: .7rem; font-weight: 700;
+  letter-spacing: .1em; text-transform: uppercase; border: 2px solid currentColor; border-radius: 4px;
+  padding: 4px 10px; transform: rotate(-2deg);
+}
+.gl-stamp--published { color: var(--success); }
+.gl-stamp--pending { color: var(--danger); }
+
+/* ---------- Alerts ---------- */
+.gl-alert { padding: 12px 16px; border-radius: var(--radius); border: 1px solid; font-size: .87rem; margin-bottom: 18px; }
+.gl-alert--success { background: var(--success-soft); border-color: var(--success); color: var(--success); }
+.gl-alert--error { background: var(--danger-soft); border-color: var(--danger); color: var(--danger); }
+.gl-alert--warning { background: var(--accent-soft); border-color: var(--accent-deep); color: var(--accent-deep); }
+.gl-alert--info { background: var(--paper-dim); border-color: var(--line); color: var(--ink-soft); }
+
+/* ---------- Accounts (login) ---------- */
+.acc-shell { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: var(--ink); padding: 20px; }
+.acc-panel { width: 100%; max-width: 380px; background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); padding: 40px 34px; }
+.acc-seal { width: 44px; height: 44px; border: 2px solid var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-weight: 700; color: var(--accent-deep); margin: 0 auto 18px; }
+.acc-panel h1 { text-align: center; font-size: 1.3rem; }
+.acc-panel__sub { text-align: center; color: var(--ink-soft); font-size: .82rem; margin-bottom: 26px; }
+.acc-panel .gl-btn { width: 100%; justify-content: center; margin-top: 6px; }
+
+/* ---------- Academics ---------- */
+.aca-tag { display: inline-block; font-family: var(--font-mono); font-size: .72rem; background: var(--paper-dim); border: 1px solid var(--line); border-radius: 4px; padding: 2px 7px; }
+.aca-inline-form { display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-end; margin-bottom: 20px; }
+.aca-inline-form .gl-form-row { margin-bottom: 0; min-width: 160px; flex: 1; }
+
+/* ---------- Students ---------- */
+.stu-id-card { display: flex; gap: 18px; align-items: center; }
+.stu-id-card__matric { font-family: var(--font-mono); font-size: 1.1rem; letter-spacing: .02em; color: var(--accent-deep); font-weight: 600; }
+.stu-meta-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; margin-top: 18px; }
+.stu-meta-grid dt { font-family: var(--font-mono); font-size: .65rem; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-soft); }
+.stu-meta-grid dd { margin: 3px 0 0; font-weight: 600; }
+.stu-filter-bar { display: flex; gap: 10px; margin-bottom: 18px; }
+
+/* ---------- Lecturers ---------- */
+.lec-course-card { border: 1px solid var(--line); border-radius: var(--radius); padding: 18px 20px; background: var(--card); display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.lec-course-card + .lec-course-card { margin-top: 12px; }
+.lec-course-card__code { font-family: var(--font-mono); font-weight: 600; color: var(--accent-deep); }
+
+/* ---------- Results ---------- */
+.res-score-input { width: 70px !important; text-align: center; }
+.res-grade-pill { font-family: var(--font-mono); font-weight: 700; padding: 2px 8px; border-radius: 4px; background: var(--accent-soft); color: var(--accent-deep); }
+.res-gpa-block { display: flex; gap: 28px; flex-wrap: wrap; margin-top: 4px; }
+.res-gpa-block__item { text-align: left; }
+.res-gpa-block__value { font-family: var(--font-display); font-size: 2.1rem; font-weight: 600; color: var(--ink); }
+.res-gpa-block__label { font-family: var(--font-mono); font-size: .68rem; text-transform: uppercase; letter-spacing: .09em; color: var(--ink-soft); }
+
+/* ---------- Reports ---------- */
+.rpt-bar-track { background: var(--paper-dim); border-radius: 4px; height: 8px; overflow: hidden; width: 100%; }
+.rpt-bar-fill { background: var(--accent); height: 100%; }
+.rpt-filter-form { display: flex; gap: 10px; margin-bottom: 20px; }
+
+/* ---------- Utility ---------- */
+.gl-mt-0 { margin-top: 0 !important; }
+.gl-text-muted { color: var(--ink-soft); }
+.gl-flex-between { display: flex; align-items: center; justify-content: space-between; }
+
+@media (max-width: 860px) {
+  .gl-app { flex-direction: column; }
+  .gl-sidebar { width: 100%; flex-direction: row; overflow-x: auto; padding: 14px 16px; align-items: center; }
+  .gl-sidebar__brand { border-bottom: none; padding-bottom: 0; }
+  .gl-nav { flex-direction: row; }
+  .gl-nav__section-label { display: none; }
+  .gl-form-grid { grid-template-columns: 1fr; }
+  .gl-container { padding: 20px; }
+}

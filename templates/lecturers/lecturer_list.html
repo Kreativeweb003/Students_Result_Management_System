@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Lecturers{% endblock %}
+{% block page_title %}Lecturers{% endblock %}
+
+{% block content %}
+<div class="gl-page-head">
+  <div>
+    <span class="gl-page-head__eyebrow">People</span>
+    <h2 class="gl-mt-0">Lecturers</h2>
+    <p>{{ lecturers.count }} lecturer{{ lecturers.count|pluralize }} on record.</p>
+  </div>
+  <a href="{% url 'lecturers:register_lecturer' %}" class="gl-btn gl-btn--accent">Register lecturer</a>
+</div>
+
+<div class="gl-card">
+  <div class="gl-table-wrap">
+    <table class="gl-table">
+      <thead><tr><th>Staff ID</th><th>Name</th><th>Department</th></tr></thead>
+      <tbody>
+        {% for lecturer in lecturers %}
+        <tr>
+          <td class="gl-num">{{ lecturer.staff_id }}</td>
+          <td>{{ lecturer.full_name }}</td>
+          <td>{{ lecturer.department.name|default:"—" }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="3" class="gl-table-empty">No lecturers yet — register one to get started.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

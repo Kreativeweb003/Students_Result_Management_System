@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}My profile{% endblock %}
+{% block page_title %}My profile{% endblock %}
+
+{% block content %}
+<div class="gl-page-head">
+  <div>
+    <span class="gl-page-head__eyebrow">Account</span>
+    <h2 class="gl-mt-0">Profile</h2>
+    <p>Academic records can only be changed by the registrar. You can update the fields below.</p>
+  </div>
+</div>
+
+<div class="gl-card" style="max-width: 420px;">
+  <div class="gl-card__title">{{ student.matric_number }} · {{ student.full_name }}</div>
+  <form method="post">
+    {% csrf_token %}
+    <div class="gl-form-row">
+      <label>Date of birth</label>
+      {{ form.date_of_birth }}
+    </div>
+    <div class="gl-form-actions">
+      <button type="submit" class="gl-btn gl-btn--accent">Save changes</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

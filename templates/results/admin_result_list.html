@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}All results{% endblock %}
+{% block page_title %}All results{% endblock %}
+
+{% block content %}
+<div class="gl-page-head">
+  <div>
+    <span class="gl-page-head__eyebrow">Results</span>
+    <h2 class="gl-mt-0">All results</h2>
+    <p>Every score entered by lecturers, across all sessions and semesters.</p>
+  </div>
+  <a href="{% url 'results:publish_results' %}" class="gl-btn gl-btn--accent">Publish results</a>
+</div>
+
+<div class="gl-card">
+  <div class="gl-table-wrap">
+    <table class="gl-table">
+      <thead><tr><th>Matric no.</th><th>Course</th><th>Session</th><th>Semester</th><th>Total</th><th>Grade</th><th>Status</th></tr></thead>
+      <tbody>
+        {% for result in results %}
+        <tr>
+          <td class="gl-num">{{ result.student.matric_number }}</td>
+          <td>{{ result.course.code }}</td>
+          <td>{{ result.session.name }}</td>
+          <td>{{ result.semester.get_name_display }}</td>
+          <td class="gl-num">{{ result.total_score }}</td>
+          <td><span class="res-grade-pill">{{ result.grade }}</span></td>
+          <td>
+            {% if result.is_published %}
+              <span class="gl-badge gl-badge--ok">Published</span>
+            {% else %}
+              <span class="gl-badge gl-badge--warn">Not published</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="7" class="gl-table-empty">No results have been entered yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Allocate course{% endblock %}
+{% block page_title %}Allocate course{% endblock %}
+
+{% block content %}
+<div class="gl-page-head">
+  <div>
+    <span class="gl-page-head__eyebrow">People</span>
+    <h2 class="gl-mt-0">Allocate a course to a lecturer</h2>
+    <p>A lecturer can only enter scores for courses allocated to them here, for the chosen session and semester.</p>
+  </div>
+</div>
+
+<div class="gl-card" style="max-width: 560px;">
+  <form method="post">
+    {% csrf_token %}
+    <div class="gl-form-row"><label>Lecturer</label>{{ form.lecturer }}</div>
+    <div class="gl-form-row"><label>Course</label>{{ form.course }}</div>
+    <div class="gl-form-row"><label>Session</label>{{ form.session }}</div>
+    <div class="gl-form-row"><label>Semester</label>{{ form.semester }}</div>
+    {% if form.non_field_errors %}<div class="gl-alert gl-alert--error">{{ form.non_field_errors.0 }}</div>{% endif %}
+    <div class="gl-form-actions">
+      <button type="submit" class="gl-btn gl-btn--accent">Allocate</button>
+      <a href="{% url 'lecturers:allocation_list' %}" class="gl-btn gl-btn--ghost">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

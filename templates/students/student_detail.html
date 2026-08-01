@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}{{ student.matric_number }}{% endblock %}
+{% block page_title %}Student profile{% endblock %}
+
+{% block content %}
+<div class="gl-page-head">
+  <div>
+    <span class="gl-page-head__eyebrow">People · Students</span>
+    <h2 class="gl-mt-0 stu-id-card__matric">{{ student.matric_number }}</h2>
+  </div>
+  <a href="{% url 'students:student_list' %}" class="gl-btn gl-btn--ghost">Back to students</a>
+</div>
+
+<div class="gl-card">
+  <div class="stu-id-card">
+    <div>
+      <h3 class="gl-mt-0">{{ student.full_name }}</h3>
+      <p class="gl-text-muted">{{ student.user.email }}</p>
+    </div>
+  </div>
+
+  <dl class="stu-meta-grid">
+    <div><dt>Department</dt><dd>{{ student.department.name|default:"—" }}</dd></div>
+    <div><dt>Programme</dt><dd>{{ student.programme|default:"—" }}</dd></div>
+    <div><dt>Level</dt><dd>{{ student.level.name|default:"—" }}</dd></div>
+    <div><dt>Study mode</dt><dd>{{ student.get_study_mode_display }}</dd></div>
+    <div><dt>Gender</dt><dd>{{ student.get_gender_display|default:"—" }}</dd></div>
+    <div><dt>Date of birth</dt><dd>{{ student.date_of_birth|default:"—" }}</dd></div>
+    <div><dt>Admission session</dt><dd>{{ student.admission_session|default:"—" }}</dd></div>
+  </dl>
+</div>
+{% endblock %}

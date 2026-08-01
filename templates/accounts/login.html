@@ -1,0 +1,39 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign in · SRMS</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+  <div class="acc-shell">
+    <div class="acc-panel">
+      <div class="acc-seal">SR</div>
+      <h1>Student Result<br>Management System</h1>
+      <p class="acc-panel__sub">Sign in with the credentials issued by your registrar.</p>
+
+      {% include "partials/_messages.html" %}
+
+      {% if form.errors %}
+        <div class="gl-alert gl-alert--error">Your username or password was incorrect.</div>
+      {% endif %}
+
+      <form method="post" action="{% url 'accounts:login' %}">
+        {% csrf_token %}
+        <div class="gl-form-row">
+          <label for="id_username">Username</label>
+          {{ form.username }}
+        </div>
+        <div class="gl-form-row">
+          <label for="id_password">Password</label>
+          {{ form.password }}
+        </div>
+        <input type="hidden" name="next" value="{{ next }}">
+        <button type="submit" class="gl-btn gl-btn--accent">Sign in</button>
+      </form>
+    </div>
+  </div>
+</body>
+</html>

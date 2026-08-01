@@ -1,0 +1,10 @@
+<header class="gl-topbar">
+  <div class="gl-topbar__title">{% block page_title %}Dashboard{% endblock %}</div>
+  <div class="gl-topbar__user">
+    <span>Signed in as <strong>{{ user.get_full_name|default:user.username }}</strong> · {{ user.get_role_display }}</span>
+    <form action="{% url 'accounts:logout' %}" method="post" style="margin:0;">
+      {% csrf_token %}
+      <button type="submit" class="gl-logout-btn">Log out</button>
+    </form>
+  </div>
+</header>

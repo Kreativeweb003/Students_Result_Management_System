@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Enter results{% endblock %}
+{% block page_title %}Enter results{% endblock %}
+
+{% block content %}
+<div class="gl-page-head">
+  <div>
+    <span class="gl-page-head__eyebrow">Results</span>
+    <h2 class="gl-mt-0">Select a course</h2>
+    <p>Choose one of your allocated courses for the current semester to enter or edit scores.</p>
+  </div>
+</div>
+
+<div class="gl-card">
+  {% for allocation in allocations %}
+    <div class="lec-course-card">
+      <div>
+        <div class="lec-course-card__code">{{ allocation.course.code }}</div>
+        <div class="gl-text-muted">{{ allocation.course.title }} · {{ allocation.session.name }}</div>
+      </div>
+      <a href="{% url 'results:enter_results' allocation.pk %}" class="gl-btn gl-btn--accent gl-btn--sm">Enter results</a>
+    </div>
+  {% empty %}
+    <p class="gl-text-muted">No courses allocated to you for the current semester.</p>
+  {% endfor %}
+</div>
+{% endblock %}
