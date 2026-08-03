@@ -8,7 +8,10 @@
     {% if user.is_admin %}
       <span class="gl-nav__section-label">Setup</span>
       <a class="gl-nav__link" href="{% url 'academics:home' %}">Academic structure</a>
+      <a class="gl-nav__link" href="{% url 'academics:session_list' %}">Sessions</a>
       <a class="gl-nav__link" href="{% url 'academics:department_list' %}">Departments</a>
+      <a class="gl-nav__link" href="{% url 'academics:programme_list' %}">Programmes</a>
+      <a class="gl-nav__link" href="{% url 'academics:level_list' %}">Levels</a>
       <a class="gl-nav__link" href="{% url 'academics:course_list' %}">Courses</a>
       <a class="gl-nav__link" href="{% url 'academics:curriculum_list' %}">Curriculum</a>
 

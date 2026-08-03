@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Edit level{% endblock %}
+{% block page_title %}Edit level{% endblock %}
+
+{% block content %}
+<div class="gl-page-head">
+  <div>
+    <span class="gl-page-head__eyebrow">Setup · Levels</span>
+    <h2 class="gl-mt-0">Edit {{ level }}</h2>
+  </div>
+  <a href="{% url 'academics:level_list' %}" class="gl-btn gl-btn--ghost">Back to levels</a>
+</div>
+
+<div class="gl-card" style="max-width: 420px;">
+  <form method="post">
+    {% csrf_token %}
+    <div class="gl-form-row"><label>Programme</label>{{ form.programme }}</div>
+    <div class="gl-form-row"><label>Level name</label>{{ form.name }}</div>
+    <div class="gl-form-actions">
+      <button type="submit" class="gl-btn gl-btn--accent">Save changes</button>
+      <a href="{% url 'academics:level_list' %}" class="gl-btn gl-btn--ghost">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

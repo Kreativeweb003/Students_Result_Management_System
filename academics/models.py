@@ -34,11 +34,10 @@ class Level(models.Model):
         ordering = ["programme", "name"]
 
     def __str__(self):
-        return f"{self.programme.name} {self.name}"
+        return f"{self.name}"
 
 
 class Session(models.Model):
-    # e.g. "2024/2025"
     name = models.CharField(max_length=20, unique=True)
     is_current = models.BooleanField(default=False)
 
@@ -49,10 +48,15 @@ class Session(models.Model):
         return self.name
 
     def save(self, *args, **kwargs):
-        # ensure only one session is marked current
+        is_new = self._state.adding
         if self.is_current:
             Session.objects.exclude(pk=self.pk).update(is_current=False)
         super().save(*args, **kwargs)
+
+        if is_new:
+            # auto-create both semesters for a new session so nobody has to do it by hand
+            for semester_choice in Semester.SemesterName.values:
+                Semester.objects.get_or_create(session=self, name=semester_choice)
 
 
 class Semester(models.Model):

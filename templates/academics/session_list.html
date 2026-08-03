@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block title %}Sessions{% endblock %}
+{% block page_title %}Sessions{% endblock %}
+
+{% block content %}
+<div class="gl-page-head">
+  <div>
+    <span class="gl-page-head__eyebrow">Setup</span>
+    <h2 class="gl-mt-0">Sessions</h2>
+    <p>Academic years, e.g. "2025/2026". Only one session can be current at a time.</p>
+  </div>
+</div>
+
+<div class="gl-card">
+  <div class="gl-card__title">Add a session</div>
+  <form method="post" class="aca-inline-form">
+    {% csrf_token %}
+    <div class="gl-form-row"><label>Session name</label>{{ form.name }}</div>
+    <div class="gl-form-row" style="flex:0 0 auto;">
+      <label style="display:flex; align-items:center; gap:6px; font-weight:500;">
+        {{ form.is_current }} Set as current
+      </label>
+    </div>
+    <button type="submit" class="gl-btn gl-btn--accent">Add session</button>
+  </form>
+</div>
+
+<div class="gl-card">
+  <div class="gl-card__title">All sessions</div>
+  <div class="gl-table-wrap">
+    <table class="gl-table">
+      <thead><tr><th>Session</th><th>Status</th><th>Semesters</th><th></th></tr></thead>
+      <tbody>
+        {% for session in sessions %}
+        <tr>
+          <td>{{ session.name }}</td>
+          <td>
+            {% if session.is_current %}
+              <span class="gl-badge gl-badge--ok">Current</span>
+            {% else %}
+              <span class="gl-text-muted">—</span>
+            {% endif %}
+          </td>
+          <td>
+            {% for semester in session.semesters.all %}
+              <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+                <span>{{ semester.get_name_display }}</span>
+                {% if semester.is_current %}
+                  <span class="gl-badge gl-badge--ok">Current</span>
+                {% else %}
+                  <form method="post" action="{% url 'academics:semester_set_current' semester.pk %}" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="gl-btn gl-btn--ghost gl-btn--sm">Set current</button>
+                  </form>
+                {% endif %}
+              </div>
+            {% empty %}
+              <span class="gl-text-muted">—</span>
+            {% endfor %}
+          </td>
+          <td>
+            {% if not session.is_current %}
+            <form method="post" action="{% url 'academics:session_set_current' session.pk %}" style="display:inline;">
+              {% csrf_token %}
+              <button type="submit" class="gl-btn gl-btn--ghost gl-btn--sm">Set current session</button>
+            </form>
+            {% endif %}
+            <a href="{% url 'academics:session_update' session.pk %}" class="gl-btn gl-btn--ghost gl-btn--sm">Edit</a>
+            <form method="post" action="{% url 'academics:session_delete' session.pk %}" style="display:inline;">
+              {% csrf_token %}
+              <button type="submit" class="gl-btn gl-btn--danger gl-btn--sm" onclick="return confirm('Delete {{ session.name }}? This also removes its semesters.');">Delete</button>
+            </form>
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4" class="gl-table-empty">No sessions yet — add one above.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

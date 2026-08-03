@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Edit course{% endblock %}
+{% block page_title %}Edit course{% endblock %}
+
+{% block content %}
+<div class="gl-page-head">
+  <div>
+    <span class="gl-page-head__eyebrow">Setup · Courses</span>
+    <h2 class="gl-mt-0">Edit {{ course.code }}</h2>
+  </div>
+  <a href="{% url 'academics:course_list' %}" class="gl-btn gl-btn--ghost">Back to courses</a>
+</div>
+
+<div class="gl-card" style="max-width: 500px;">
+  <form method="post">
+    {% csrf_token %}
+    <div class="gl-form-row"><label>Code</label>{{ form.code }}</div>
+    <div class="gl-form-row"><label>Title</label>{{ form.title }}</div>
+    <div class="gl-form-row"><label>Unit</label>{{ form.unit }}</div>
+    <div class="gl-form-row"><label>Department</label>{{ form.department }}</div>
+    <div class="gl-form-actions">
+      <button type="submit" class="gl-btn gl-btn--accent">Save changes</button>
+      <a href="{% url 'academics:course_list' %}" class="gl-btn gl-btn--ghost">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

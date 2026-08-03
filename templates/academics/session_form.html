@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Edit session{% endblock %}
+{% block page_title %}Edit session{% endblock %}
+
+{% block content %}
+<div class="gl-page-head">
+  <div>
+    <span class="gl-page-head__eyebrow">Setup · Sessions</span>
+    <h2 class="gl-mt-0">Edit {{ session.name }}</h2>
+  </div>
+  <a href="{% url 'academics:session_list' %}" class="gl-btn gl-btn--ghost">Back to sessions</a>
+</div>
+
+<div class="gl-card" style="max-width: 380px;">
+  <form method="post">
+    {% csrf_token %}
+    <div class="gl-form-row"><label>Session name</label>{{ form.name }}</div>
+    <div class="gl-form-row">
+      <label style="display:flex; align-items:center; gap:6px; font-weight:500;">
+        {{ form.is_current }} Set as current
+      </label>
+    </div>
+    <div class="gl-form-actions">
+      <button type="submit" class="gl-btn gl-btn--accent">Save changes</button>
+      <a href="{% url 'academics:session_list' %}" class="gl-btn gl-btn--ghost">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

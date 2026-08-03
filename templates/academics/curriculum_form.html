@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Edit curriculum entry{% endblock %}
+{% block page_title %}Edit curriculum entry{% endblock %}
+
+{% block content %}
+<div class="gl-page-head">
+  <div>
+    <span class="gl-page-head__eyebrow">Setup · Curriculum</span>
+    <h2 class="gl-mt-0">Edit {{ entry.course.code }} entry</h2>
+  </div>
+  <a href="{% url 'academics:curriculum_list' %}" class="gl-btn gl-btn--ghost">Back to curriculum</a>
+</div>
+
+<div class="gl-card" style="max-width: 500px;">
+  <form method="post">
+    {% csrf_token %}
+    <div class="gl-form-row"><label>Department</label>{{ form.department }}</div>
+    <div class="gl-form-row"><label>Programme</label>{{ form.programme }}</div>
+    <div class="gl-form-row"><label>Level</label>{{ form.level }}</div>
+    <div class="gl-form-row"><label>Semester</label>{{ form.semester_name }}</div>
+    <div class="gl-form-row"><label>Course</label>{{ form.course }}</div>
+    {% if form.non_field_errors %}<div class="gl-alert gl-alert--error">{{ form.non_field_errors.0 }}</div>{% endif %}
+    <div class="gl-form-actions">
+      <button type="submit" class="gl-btn gl-btn--accent">Save changes</button>
+      <a href="{% url 'academics:curriculum_list' %}" class="gl-btn gl-btn--ghost">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Edit programme{% endblock %}
+{% block page_title %}Edit programme{% endblock %}
+
+{% block content %}
+<div class="gl-page-head">
+  <div>
+    <span class="gl-page-head__eyebrow">Setup · Programmes</span>
+    <h2 class="gl-mt-0">Edit {{ programme.get_name_display }}</h2>
+  </div>
+  <a href="{% url 'academics:programme_list' %}" class="gl-btn gl-btn--ghost">Back to programmes</a>
+</div>
+
+<div class="gl-card" style="max-width: 380px;">
+  <form method="post">
+    {% csrf_token %}
+    <div class="gl-form-row"><label>Programme</label>{{ form.name }}</div>
+    <div class="gl-form-actions">
+      <button type="submit" class="gl-btn gl-btn--accent">Save changes</button>
+      <a href="{% url 'academics:programme_list' %}" class="gl-btn gl-btn--ghost">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

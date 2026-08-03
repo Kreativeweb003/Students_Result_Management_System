@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Programmes{% endblock %}
+{% block page_title %}Programmes{% endblock %}
+
+{% block content %}
+<div class="gl-page-head">
+  <div>
+    <span class="gl-page-head__eyebrow">Setup</span>
+    <h2 class="gl-mt-0">Programmes</h2>
+    <p>ND or HND — the top of the academic hierarchy that levels sit under.</p>
+  </div>
+</div>
+
+<div class="gl-card">
+  <div class="gl-card__title">Add a programme</div>
+  <form method="post" class="aca-inline-form">
+    {% csrf_token %}
+    <div class="gl-form-row"><label>Programme</label>{{ form.name }}</div>
+    <button type="submit" class="gl-btn gl-btn--accent">Add programme</button>
+  </form>
+</div>
+
+<div class="gl-card">
+  <div class="gl-card__title">All programmes</div>
+  <div class="gl-table-wrap">
+    <table class="gl-table">
+      <thead><tr><th>Programme</th><th></th></tr></thead>
+      <tbody>
+        {% for programme in programmes %}
+        <tr>
+          <td>{{ programme.get_name_display }}</td>
+          <td>
+            <a href="{% url 'academics:programme_update' programme.pk %}" class="gl-btn gl-btn--ghost gl-btn--sm">Edit</a>
+            <form method="post" action="{% url 'academics:programme_delete' programme.pk %}" style="display:inline;">
+              {% csrf_token %}
+              <button type="submit" class="gl-btn gl-btn--danger gl-btn--sm" onclick="return confirm('Delete {{ programme }}?');">Delete</button>
+            </form>
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="2" class="gl-table-empty">No programmes yet — add one above.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

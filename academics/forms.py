@@ -26,8 +26,20 @@ class CurriculumForm(forms.ModelForm):
         if department_id:
             self.fields["course"].queryset = Course.objects.filter(department_id=department_id)
 
+class ProgrammeForm(forms.ModelForm):
+    class Meta:
+        model = Programme
+        fields = ["name"]
 
 
+class LevelForm(forms.ModelForm):
+    class Meta:
+        model = Level
+        fields = ["programme", "name"]
 
 
+class SessionForm(forms.ModelForm):
+    class Meta:
+        model = Session
+        fields = ["name", "is_current"]
 

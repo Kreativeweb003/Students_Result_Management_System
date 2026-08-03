@@ -27,7 +27,7 @@
   <div class="gl-card__title">All courses</div>
   <div class="gl-table-wrap">
     <table class="gl-table">
-      <thead><tr><th>Code</th><th>Title</th><th>Unit</th><th>Department</th></tr></thead>
+      <thead><tr><th>Code</th><th>Title</th><th>Unit</th><th>Department</th><th></th></tr></thead>
       <tbody>
         {% for course in courses %}
         <tr>
@@ -35,9 +35,16 @@
           <td>{{ course.title }}</td>
           <td class="gl-num">{{ course.unit }}</td>
           <td>{{ course.department.name|default:"—" }}</td>
+          <td>
+            <a href="{% url 'academics:course_update' course.pk %}" class="gl-btn gl-btn--ghost gl-btn--sm">Edit</a>
+            <form method="post" action="{% url 'academics:course_delete' course.pk %}" style="display:inline;">
+              {% csrf_token %}
+              <button type="submit" class="gl-btn gl-btn--danger gl-btn--sm" onclick="return confirm('Delete {{ course.code }}?');">Delete</button>
+            </form>
+          </td>
         </tr>
         {% empty %}
-        <tr><td colspan="4" class="gl-table-empty">No courses yet — add one above.</td></tr>
+        <tr><td colspan="5" class="gl-table-empty">No courses yet — add one above.</td></tr>
         {% endfor %}
       </tbody>
     </table>
