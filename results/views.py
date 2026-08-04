@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from accounts.decorators import lecturer_required, student_required, admin_required
 from lecturers.models import Lecturer, CourseAllocation
 from students.models import Student
-from academics.models import Semester
+from academics.models import Semester, Session
 from .models import Result
 from .forms import ResultEntryForm
 from .services import calculate_gpa, calculate_cgpa, get_academic_standing
@@ -143,8 +143,10 @@ def publish_results(request):
         messages.success(request, f"{updated} result(s) published for students to view.")
         return redirect("results:admin_result_list")
 
-    return render(request, "results/publish_results.html")
-
+    return render(request, "results/publish_results.html", {
+        "sessions": Session.objects.all(),
+        "semesters": Semester.objects.all(),
+    })
 
 
 
