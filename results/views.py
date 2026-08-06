@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-
+from decimal import Decimal, InvalidOperation
 from accounts.decorators import lecturer_required, student_required, admin_required
 from lecturers.models import Lecturer, CourseAllocation
 from students.models import Student
@@ -26,15 +26,13 @@ def select_course_for_entry(request):
     return render(request, "results/select_course.html", {"allocations": allocations})
 
 
+
 @login_required
 @lecturer_required
 def enter_results(request, allocation_id):
     lecturer = get_object_or_404(Lecturer, user=request.user)
     allocation = get_object_or_404(CourseAllocation, pk=allocation_id, lecturer=lecturer)
 
-    # find every curriculum entry that places this course in a specific
-    # department/programme/level for this semester name (a course can be
-    # shared across multiple departments, e.g. GST111)
     curriculum_entries = Curriculum.objects.filter(
         course=allocation.course,
         semester_name=allocation.semester.name,
@@ -48,7 +46,6 @@ def enter_results(request, allocation_id):
         )
         eligible_students = Student.objects.none()
     else:
-        # build an OR query across all matching dept/programme/level combos
         student_filter = Q()
         for entry in curriculum_entries:
             student_filter |= Q(
@@ -59,24 +56,58 @@ def enter_results(request, allocation_id):
         eligible_students = Student.objects.filter(student_filter).select_related("user")
 
     if request.method == "POST":
+        saved_count = 0
+        skipped_count = 0
+
         for student in eligible_students:
             ca = request.POST.get(f"ca_{student.id}")
             exam = request.POST.get(f"exam_{student.id}")
+
             if ca in (None, "") or exam in (None, ""):
+                continue  # lecturer hasn't scored this student yet -- fine, skip silently
+
+            # first line of defense: catch malformed input before it's even a Decimal
+            try:
+                ca_value = Decimal(ca)
+                exam_value = Decimal(exam)
+            except InvalidOperation:
+                messages.error(request, f"Invalid score entered for {student.matric_number} — skipped.")
+                skipped_count += 1
                 continue
 
-            result, _ = Result.objects.update_or_create(
-                student=student,
-                course=allocation.course,
-                session=allocation.session,
-                semester=allocation.semester,
-                defaults={
-                    "lecturer": lecturer,
-                    "ca_score": ca,
-                    "exam_score": exam,
-                },
-            )
-        messages.success(request, "Results saved successfully.")
+            if ca_value < 0 or ca_value > 30 or exam_value < 0 or exam_value > 70:
+                messages.error(
+                    request,
+                    f"Score out of range for {student.matric_number} "
+                    f"(CA max 30, Exam max 70) — skipped."
+                )
+                skipped_count += 1
+                continue
+
+            # second line of defense: the model's own full_clean() runs inside save(),
+            # so anything that slips past the checks above still can't reach the database
+            try:
+                Result.objects.update_or_create(
+                    student=student,
+                    course=allocation.course,
+                    session=allocation.session,
+                    semester=allocation.semester,
+                    defaults={
+                        "lecturer": lecturer,
+                        "ca_score": ca_value,
+                        "exam_score": exam_value,
+                    },
+                )
+                saved_count += 1
+            except DjangoValidationError as e:
+                messages.error(request, f"Could not save result for {student.matric_number}: {e}")
+                skipped_count += 1
+
+        if saved_count:
+            messages.success(request, f"{saved_count} result(s) saved successfully.")
+        if not saved_count and not skipped_count:
+            messages.info(request, "No scores were entered.")
+
         return redirect("results:select_course")
 
     existing_results = {
@@ -91,6 +122,7 @@ def enter_results(request, allocation_id):
         "existing_results": existing_results,
         "curriculum_entries": curriculum_entries,
     })
+
 
 
 @login_required

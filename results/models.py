@@ -73,3 +73,11 @@ class Result(models.Model):
     def save(self, *args, **kwargs):
         self.compute_grade()
         super().save(*args, **kwargs)
+
+
+
+
+
+
+
+
