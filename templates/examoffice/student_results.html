@@ -1,28 +1,27 @@
 {% extends "base.html" %}
-{% block title %}All results{% endblock %}
-{% block page_title %}All results{% endblock %}
+{% block title %}{{ student.matric_number }}{% endblock %}
+{% block page_title %}Student results{% endblock %}
 
 {% block content %}
 <div class="gl-page-head">
   <div>
-    <span class="gl-page-head__eyebrow">Results</span>
-    <h2 class="gl-mt-0">All results</h2>
-    <p>Every score entered by lecturers, across all sessions and semesters.</p>
+    <span class="gl-page-head__eyebrow">{{ officer.department.name }} · Exam Office</span>
+    <h2 class="gl-mt-0 stu-id-card__matric">{{ student.matric_number }}</h2>
+    <p>{{ student.full_name }} · {{ student.programme.name|default:"—" }} {{ student.level.name|default:"" }}</p>
   </div>
-  <a href="{% url 'results:publish_results' %}" class="gl-btn gl-btn--accent">Publish results</a>
+  <a href="{% url 'examoffice:dashboard' %}" class="gl-btn gl-btn--ghost">Back to dashboard</a>
 </div>
 
 <div class="gl-card">
   <div class="gl-table-wrap">
     <table class="gl-table">
-      <thead><tr><th>Matric no.</th><th>Course</th><th>Session</th><th>Semester</th><th>Total</th><th>Grade</th><th>Review</th><th>Publish</th></tr></thead>
+      <thead><tr><th>Session</th><th>Semester</th><th>Course</th><th>Total</th><th>Grade</th><th>Review</th><th>Publish</th></tr></thead>
       <tbody>
         {% for result in results %}
         <tr>
-          <td class="gl-num">{{ result.student.matric_number }}</td>
-          <td>{{ result.course.code }}</td>
           <td>{{ result.session.name }}</td>
           <td>{{ result.semester.get_name_display }}</td>
+          <td>{{ result.course.code }} — {{ result.course.title }}</td>
           <td class="gl-num">{{ result.total_score }}</td>
           <td><span class="res-grade-pill">{{ result.grade }}</span></td>
           <td>
@@ -43,7 +42,7 @@
           </td>
         </tr>
         {% empty %}
-        <tr><td colspan="8" class="gl-table-empty">No results have been entered yet.</td></tr>
+        <tr><td colspan="7" class="gl-table-empty">No results recorded for this student yet.</td></tr>
         {% endfor %}
       </tbody>
     </table>

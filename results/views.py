@@ -26,7 +26,6 @@ def select_course_for_entry(request):
     return render(request, "results/select_course.html", {"allocations": allocations})
 
 
-
 @login_required
 @lecturer_required
 def enter_results(request, allocation_id):
@@ -64,9 +63,8 @@ def enter_results(request, allocation_id):
             exam = request.POST.get(f"exam_{student.id}")
 
             if ca in (None, "") or exam in (None, ""):
-                continue  # lecturer hasn't scored this student yet -- fine, skip silently
+                continue
 
-            # first line of defense: catch malformed input before it's even a Decimal
             try:
                 ca_value = Decimal(ca)
                 exam_value = Decimal(exam)
@@ -84,10 +82,9 @@ def enter_results(request, allocation_id):
                 skipped_count += 1
                 continue
 
-            # second line of defense: the model's own full_clean() runs inside save(),
-            # so anything that slips past the checks above still can't reach the database
+            # ↓↓↓ THIS is the block that gets replaced ↓↓↓
             try:
-                Result.objects.update_or_create(
+                result, created = Result.objects.update_or_create(
                     student=student,
                     course=allocation.course,
                     session=allocation.session,
@@ -98,10 +95,16 @@ def enter_results(request, allocation_id):
                         "exam_score": exam_value,
                     },
                 )
+                if not created and result.status != Result.Status.PENDING:
+                    result.status = Result.Status.PENDING
+                    result.reviewed_by = None
+                    result.rejection_reason = ""
+                    result.save()
                 saved_count += 1
             except DjangoValidationError as e:
                 messages.error(request, f"Could not save result for {student.matric_number}: {e}")
                 skipped_count += 1
+            # ↑↑↑ end of replaced block ↑↑↑
 
         if saved_count:
             messages.success(request, f"{saved_count} result(s) saved successfully.")
@@ -122,7 +125,6 @@ def enter_results(request, allocation_id):
         "existing_results": existing_results,
         "curriculum_entries": curriculum_entries,
     })
-
 
 
 @login_required
@@ -167,12 +169,19 @@ def admin_result_list(request):
 @login_required
 @admin_required
 def publish_results(request):
-    """Bulk publish for a given session/semester -- simple toggle, no approval chain."""
     if request.method == "POST":
         session_id = request.POST.get("session")
         semester_id = request.POST.get("semester")
-        updated = Result.objects.filter(session_id=session_id, semester_id=semester_id).update(is_published=True)
-        messages.success(request, f"{updated} result(s) published for students to view.")
+        updated = Result.objects.filter(
+            session_id=session_id, semester_id=semester_id, status=Result.Status.APPROVED
+        ).update(is_published=True)
+        skipped = Result.objects.filter(
+            session_id=session_id, semester_id=semester_id
+        ).exclude(status=Result.Status.APPROVED).count()
+
+        messages.success(request, f"{updated} approved result(s) published.")
+        if skipped:
+            messages.warning(request, f"{skipped} result(s) skipped — not yet approved by the exam office.")
         return redirect("results:admin_result_list")
 
     return render(request, "results/publish_results.html", {

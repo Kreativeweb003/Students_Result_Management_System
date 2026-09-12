@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Exam officers{% endblock %}
+{% block page_title %}Exam officers{% endblock %}
+
+{% block content %}
+<div class="gl-page-head">
+  <div>
+    <span class="gl-page-head__eyebrow">People</span>
+    <h2 class="gl-mt-0">Exam officers</h2>
+    <p>{{ officers.count }} exam officer{{ officers.count|pluralize }} on record, one per department.</p>
+  </div>
+  <a href="{% url 'examoffice:register_officer' %}" class="gl-btn gl-btn--accent">Register exam officer</a>
+</div>
+
+<div class="gl-card">
+  <div class="gl-table-wrap">
+    <table class="gl-table">
+      <thead><tr><th>Staff ID</th><th>Name</th><th>Department</th></tr></thead>
+      <tbody>
+        {% for officer in officers %}
+        <tr>
+          <td class="gl-num">{{ officer.staff_id }}</td>
+          <td>{{ officer.full_name }}</td>
+          <td>{{ officer.department.name }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="3" class="gl-table-empty">No exam officers yet — register one to get started.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

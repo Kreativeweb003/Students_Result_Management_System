@@ -19,11 +19,16 @@
       <a class="gl-nav__link" href="{% url 'students:student_list' %}">Students</a>
       <a class="gl-nav__link" href="{% url 'lecturers:lecturer_list' %}">Lecturers</a>
       <a class="gl-nav__link" href="{% url 'lecturers:allocation_list' %}">Course allocations</a>
+      <a class="gl-nav__link" href="{% url 'examoffice:officer_list' %}">Exam officers</a>
 
       <span class="gl-nav__section-label">Results</span>
       <a class="gl-nav__link" href="{% url 'results:admin_result_list' %}">All results</a>
       <a class="gl-nav__link" href="{% url 'results:publish_results' %}">Publish results</a>
       <a class="gl-nav__link" href="{% url 'reports:statistics' %}">Statistics</a>
+    {% elif user.is_exam_office %}
+      <span class="gl-nav__section-label">Exam Office</span>
+      <a class="gl-nav__link" href="{% url 'examoffice:dashboard' %}">Dashboard</a>
+      <a class="gl-nav__link" href="{% url 'examoffice:pending_results' %}">Pending results</a>
     {% elif user.is_lecturer %}
       <span class="gl-nav__section-label">Lecturer</span>
       <a class="gl-nav__link" href="{% url 'lecturers:dashboard' %}">Dashboard</a>

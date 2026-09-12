@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Pending results{% endblock %}
+{% block page_title %}Pending results{% endblock %}
+
+{% block content %}
+<div class="gl-page-head">
+  <div>
+    <span class="gl-page-head__eyebrow">{{ officer.department.name }} · Exam Office</span>
+    <h2 class="gl-mt-0">Results awaiting review</h2>
+    <p>Only results for {{ officer.department.code }} courses are shown here. Approve everything at once, or reject a specific result to send it back to the lecturer.</p>
+  </div>
+  {% if results %}
+  <form method="post" action="{% url 'examoffice:approve_all_pending' %}" onsubmit="return confirm('Approve all {{ results.count }} pending result(s) for {{ officer.department.code }}?');">
+    {% csrf_token %}
+    <button type="submit" class="gl-btn gl-btn--accent">Approve all ({{ results.count }})</button>
+  </form>
+  {% endif %}
+</div>
+
+{% if not results %}
+  <div class="gl-alert gl-alert--info">Nothing waiting for review right now.</div>
+{% else %}
+<div class="gl-card">
+  <div class="gl-table-wrap">
+    <table class="gl-table">
+      <thead><tr><th>Matric no.</th><th>Course</th><th>Session</th><th>Semester</th><th>Total</th><th>Grade</th><th></th></tr></thead>
+      <tbody>
+        {% for result in results %}
+        <tr>
+          <td class="gl-num">{{ result.student.matric_number }}</td>
+          <td>{{ result.course.code }}</td>
+          <td>{{ result.session.name }}</td>
+          <td>{{ result.semester.get_name_display }}</td>
+          <td class="gl-num">{{ result.total_score }}</td>
+          <td><span class="res-grade-pill">{{ result.grade }}</span></td>
+          <td>
+            <button type="button" class="gl-btn gl-btn--danger gl-btn--sm" onclick="document.getElementById('reject-{{ result.pk }}').classList.toggle('is-open');">Reject</button>
+            <form id="reject-{{ result.pk }}" method="post" action="{% url 'examoffice:reject_result' result.pk %}" style="display:none; margin-top:8px;" class="exo-reject-form">
+              {% csrf_token %}
+              <textarea name="reason" placeholder="Reason for rejection" rows="2" style="width:200px; font-family:inherit; font-size:.82rem; padding:6px; border:1px solid var(--line); border-radius:4px;"></textarea><br>
+              <button type="submit" class="gl-btn gl-btn--danger gl-btn--sm" style="margin-top:4px;">Confirm reject</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endif %}
+
+<style>.exo-reject-form.is-open { display: block !important; }</style>
+{% endblock %}

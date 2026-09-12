@@ -36,6 +36,11 @@ class GradingScale(models.Model):
 
 
 class Result(models.Model):
+    class Status(models.TextChoices):
+        PENDING = "PENDING", "Pending review"
+        APPROVED = "APPROVED", "Approved"
+        REJECTED = "REJECTED", "Rejected"
+
     student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name="results")
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="results")
     session = models.ForeignKey(Session, on_delete=models.CASCADE, related_name="results")
@@ -49,7 +54,11 @@ class Result(models.Model):
     grade = models.CharField(max_length=2, editable=False, blank=True)
     grade_point = models.DecimalField(max_digits=3, decimal_places=1, editable=False, default=0)
 
-    is_published = models.BooleanField(default=False)  # admin controls student visibility
+    status = models.CharField(max_length=10, choices=Status.choices, default=Status.PENDING)
+    reviewed_by = models.ForeignKey("examoffice.ExamOfficer", on_delete=models.SET_NULL, null=True, blank=True, related_name="reviewed_results")
+    rejection_reason = models.TextField(blank=True)
+
+    is_published = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -61,8 +70,19 @@ class Result(models.Model):
         return f"{self.student.matric_number} - {self.course.code}: {self.total_score} ({self.grade})"
 
     def clean(self):
-        if self.ca_score + self.exam_score > 100:
-            raise ValidationError("CA score + Exam score cannot exceed 100.")
+        for field_name in ("ca_score", "exam_score"):
+            value = getattr(self, field_name)
+            try:
+                Decimal(value)
+            except (InvalidOperation, TypeError, ValueError):
+                raise ValidationError(f"{field_name} must be a valid number.")
+
+        if self.ca_score is not None and self.exam_score is not None:
+            if self.ca_score + self.exam_score > 100:
+                raise ValidationError("CA score + Exam score cannot exceed 100.")
+
+        if self.is_published and self.status != self.Status.APPROVED:
+            raise ValidationError("A result can't be published until it's been approved by the exam office.")
 
     def compute_grade(self):
         self.total_score = self.ca_score + self.exam_score
@@ -71,6 +91,7 @@ class Result(models.Model):
         self.grade_point = grade_point or 0
 
     def save(self, *args, **kwargs):
+        self.full_clean(exclude=["total_score", "grade", "grade_point", "lecturer", "reviewed_by"])
         self.compute_grade()
         super().save(*args, **kwargs)
 

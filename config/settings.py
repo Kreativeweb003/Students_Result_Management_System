@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "academics",
     "students",
     "lecturers",
+    "examoffice",
     "results",
     "reports",
     

@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block page_title %}My dashboard{% endblock %}
+
+{% block content %}
+<div class="gl-page-head">
+  <div>
+    <span class="gl-page-head__eyebrow">Welcome back</span>
+    <h2 class="gl-mt-0">{{ officer.full_name }}</h2>
+    <p>{{ officer.department.name }} · Exam Office</p>
+  </div>
+  {% if pending_count %}
+  <a href="{% url 'examoffice:pending_results' %}" class="gl-btn gl-btn--accent">Review pending ({{ pending_count }})</a>
+  {% endif %}
+</div>
+
+<div class="gl-stat-grid">
+  <div class="gl-stat">
+    <div class="gl-stat__label">Students in department</div>
+    <div class="gl-stat__value">{{ students.count }}</div>
+  </div>
+  <div class="gl-stat">
+    <div class="gl-stat__label">Awaiting your review</div>
+    <div class="gl-stat__value">{{ pending_count }}</div>
+  </div>
+</div>
+
+<div class="gl-card">
+  <div class="gl-card__title">Students — {{ officer.department.name }}</div>
+  <div class="gl-table-wrap">
+    <table class="gl-table">
+      <thead><tr><th>Matric no.</th><th>Name</th><th>Programme</th><th>Level</th></tr></thead>
+      <tbody>
+        {% for student in students %}
+        <tr onclick="window.location='{% url 'examoffice:student_results' student.pk %}'" style="cursor:pointer;">
+          <td class="gl-num">{{ student.matric_number }}</td>
+          <td>{{ student.full_name }}</td>
+          <td>{{ student.programme.name|default:"—" }}</td>
+          <td>{{ student.level.name|default:"—" }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4" class="gl-table-empty">No students in this department yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

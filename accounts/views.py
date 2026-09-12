@@ -20,6 +20,8 @@ class RoleBasedLoginView(LoginView):
             return reverse("lecturers:dashboard")
         elif user.is_student:
             return reverse("students:dashboard")
+        elif user.is_exam_office:
+            return reverse("examoffice:dashboard")
         return "/"
 
 

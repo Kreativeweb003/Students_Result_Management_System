@@ -29,3 +29,6 @@ def lecturer_required(view_func):
 
 def student_required(view_func):
     return role_required("STUDENT")(view_func)
+
+def exam_office_required(view_func):
+    return role_required("EXAM_OFFICE")(view_func)
